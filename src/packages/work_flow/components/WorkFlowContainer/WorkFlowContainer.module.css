@@ -1,0 +1,40 @@
+.WorkFlowContainer {
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.2392156863) 0.5px,
+      transparent 0.5px,
+      transparent calc(100% - 0.5px),
+      rgba(255, 255, 255, 0.1490196078) calc(100% - 0.5px)
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.2196078431) 0.5px,
+      transparent 0.5px,
+      transparent calc(100% - 0.5px),
+      rgba(255, 255, 255, 0.2117647059) calc(100% - 0.5px)
+    );
+  background-color: #f5f7fb;
+  height: 100vh;
+  background-size: 5px 5px;
+  width: 100%;
+  position: relative;
+  touch-action: none;
+  overflow: hidden;
+}
+
+.reteBackground {
+  display: table;
+  background-color: rgb(255, 255, 255);
+  z-index: -1;
+  position: absolute;
+  top: -320000px;
+  left: -320000px;
+  width: 640000px;
+  height: 640000px;
+  opacity: 1;
+  background-image: radial-gradient(
+      rgb(242, 244, 247) 2.55px,
+      transparent 2.55px
+    ),
+    radial-gradient(rgb(242, 244, 247) 2.55px, rgb(255, 255, 255) 2.55px);
+  background-size: 20px 20px;
+}

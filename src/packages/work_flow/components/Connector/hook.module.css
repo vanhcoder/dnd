@@ -1,0 +1,46 @@
+.hookContainer {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -0%);
+}
+
+/* Dotted line connecting hooks */
+.hookContainer::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #d3d3d3 0,
+    #d3d3d3 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+/* Hook circles */
+.hook {
+  margin: 16px 0 0 0;
+  position: relative;
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px dashed #d3d3d3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d3d3d3;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
+  background-color: white;
+}
+.circle:hover {
+  background-color: greenyellow;
+}
