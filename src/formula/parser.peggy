@@ -1,6 +1,6 @@
 // Entry point
 Expression
-  = IF
+  = FunctionCall
   / COUNTIF
   / MAX
   / MIN
@@ -9,8 +9,8 @@ Expression
   / Variable
   / Primary
 
-IF
-  = "IF(" _ args:Arguments _ ")" {
+FunctionCall
+  = name:[A-Z]+[A-Z0-9_]* "(" _ args:Arguments _ ")" {
       return { type: "FunctionCall", name: name.join(""), arguments: args };
     }
 
@@ -25,13 +25,20 @@ MIN
     }
 
 COUNTIF
-  = "COUNTIF(" _ list:ArgumentList _ "," _ condition:Condition _ ")" {
-      return { type: "FunctionCall", name: "COUNTIF", arguments: [list, condition] };
+  = "COUNTIF(" _ list:ArgumentList _ "," _ key:Key _ "," _ condition:Condition _ ")" {
+      return { type: "FunctionCall", name: "COUNTIF", arguments: [list, key, condition] };
+    }
+
+
+Key
+  = "'" name:[a-z]+[a-z0-9_]* "'" {  // Tên biến viết thường
+      console.log('name', name)
+      return { type: "KEY", name: name.join("") };
     }
 
 Condition
-  = operator:"'" _ operatorValue:(">" / "<" / ">=" / "<=" / "==" / "!=") _ value:Argument _ "'" {
-     return { type: "Condition", operator: operatorValue, value: value };
+  = "'" _ operator:(">" / "<" / ">=" / "<=" / "==" / "!=") _ value:Argument _ "'" {
+     return { type: "Condition", operator: operator, value: value };
   }
 
 // Định nghĩa "Literal" để nhận mảng
@@ -63,7 +70,7 @@ Comparison
 // Primary expressions
 Primary
   = "(" _ expr:Expression _ ")" { return expr; }
-  / IF
+  / FunctionCall
   / Variable
   / Number
 
@@ -75,6 +82,7 @@ ArgumentList
 Argument
   = Variable
   / Number
+
 
 // Arguments
 Arguments
@@ -92,6 +100,7 @@ Number
 // Variables
 Variable
   = name:[a-z]+[a-z0-9_]* {  // Tên biến viết thường
+      console.log('name', name)
       return { type: "Variable", name: name.join("") };
     }
 
