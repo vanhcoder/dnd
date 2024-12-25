@@ -1,8 +1,8 @@
 import { evaluate, excelFunctions } from ".";
 import { parse } from "../formula/lib/parser";
 
-const formula = "IF(ab > 0 , b , c)";
-const variables = { ab: 1, b: 2, c: 3, x: 4, y: 5 };
+const formula = "e + IF(c > b , a + b , IF(c > d, COUNTIF(ab, '> 2'), b))";
+const variables = {e:10, ab: [1,2,3,4,5,6] , b : 2 , a: 2, c:1, d:0 };
 
 export function test() {
   try {

@@ -1,86 +1,98 @@
 // Entry point
 Expression
-  = FunctionCall
-  / IfStatement
-  / AddSubtract
+  = IF
+  / COUNTIF
+  / MAX
+  / MIN
   / Comparison
+  / Number
+  / Variable
   / Primary
 
-// Function call (for handling functions like SUM, IF, etc.)
-FunctionCall
-  = name:[a-zA-Z0-9_]+ "(" _ args:Arguments _ ")" {
-      console.log("Parsing FunctionCall:", name);
+IF
+  = "IF(" _ args:Arguments _ ")" {
       return { type: "FunctionCall", name: name.join(""), arguments: args };
     }
 
-// If statement
-IfStatement
-  = "IF" _ "(" _ condition:Expression _ "," _ trueBranch:Expression _ "," _ falseBranch:Expression _ ")" {
-      return {
-        type: "IfStatement",
-        condition,
-        trueBranch,
-        falseBranch
-      };
+MAX
+  = "MAX(" _ list:ArgumentList _ ")" {
+      return { type: "FunctionCall", name: "MAX", arguments: [list] };
     }
 
-// Comparison (for handling operators like >, <, ==, etc.)
+MIN
+  = "MIN(" _ list:ArgumentList _ ")" {
+      return { type: "FunctionCall", name: "MIN", arguments: [list] };
+    }
+
+COUNTIF
+  = "COUNTIF(" _ list:ArgumentList _ "," _ condition:Condition _ ")" {
+      return { type: "FunctionCall", name: "COUNTIF", arguments: [list, condition] };
+    }
+
+Condition
+  = operator:"'" _ operatorValue:(">" / "<" / ">=" / "<=" / "==" / "!=") _ value:Argument _ "'" {
+     return { type: "Condition", operator: operatorValue, value: value };
+  }
+
+// Định nghĩa "Literal" để nhận mảng
+Literal
+  = "[" _ values:ValueList _ "]" {
+      return { type: "Literal", value: values };
+    }
+
+
+// Danh sách giá trị trong mảng
+ValueList
+  = head:Expression tail:(_ "," _ Expression)* {
+      return [head].concat(tail.map(arg => arg[3]));
+    }
+
+
+// Comparison (e.g., A1 > 10)
 Comparison
-  = left:AddSubtract _ operator:(">" / "<" / ">=" / "<=" / "==" / "!=") _ right:Primary {
+  = left:Primary _ operator:(">" / "<" / ">=" / "<=" / "==" / "!=" / "+" / "-" / "/") _ right:Primary {
       return {
         type: "BinaryExpression",
-        operator: operator,
-        left,
-        right
-      };
-    }
-  / left:Primary _ operator:(">" / "<" / ">=" / "<=" / "==" / "!=") _ right:AddSubtract {
-      return {
-        type: "BinaryExpression",
-        operator: operator,
+        operator,
         left,
         right
       };
     }
 
 
-// Arguments for function calls
+// Primary expressions
+Primary
+  = "(" _ expr:Expression _ ")" { return expr; }
+  / IF
+  / Variable
+  / Number
+
+ArgumentList
+  = head:Argument tail:(_ "," _ Argument)* {
+      return [head].concat(tail)[0];
+    }
+
+Argument
+  = Variable
+  / Number
+
+// Arguments
 Arguments
   = head:Expression tail:(_ "," _ Expression)* {
       return [head].concat(tail.map(arg => arg[3]));
     }
 
-// Addition and Subtraction
-AddSubtract
-  = left:MultiplyDivide _ operator:("+" / "-") _ right:AddSubtract {
-      return { type: "BinaryExpression", operator: operator, left, right };
-    }
-  / MultiplyDivide
 
-// Multiplication and Division
-MultiplyDivide
-  = left:Primary _ operator:("*" / "/") _ right:MultiplyDivide {
-      return { type: "BinaryExpression", operator: operator, left, right };
-    }
-  / Primary
-
-// Parentheses or Variables/Numbers
-Primary
-  = "(" _ expr:Expression _ ")" { return expr; }
-  / Variable
-  / Number
-
-// Variable definition
-Variable
-  = name:[a-zA-Z0-9_]+ {
-      console.log("Variable name:", name);
-      return { type: "Variable", name: name.join("") };
-    }
-
-// Number definition
+// Numbers
 Number
   = digits:[0-9]+ ("." [0-9]+)? {
       return { type: "Literal", value: parseFloat(text()) };
+    }
+
+// Variables
+Variable
+  = name:[a-z]+[a-z0-9_]* {  // Tên biến viết thường
+      return { type: "Variable", name: name.join("") };
     }
 
 // Whitespace

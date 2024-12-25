@@ -11,6 +11,7 @@
     "parser": "peggy -o src/formula/lib/parser.ts --format es src/formula/parser.peggy"
   },
   "dependencies": {
+    "antlr4": "^4.13.2",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "react": "^18.2.0",
