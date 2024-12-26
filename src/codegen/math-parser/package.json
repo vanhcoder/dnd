@@ -1,0 +1,29 @@
+{
+  "name": "math-parser",
+  "version": "1.0.0",
+  "description": "A lexer and parser for mathematical formulas.",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.0.0",
+    "jest": "^26.0.0",
+    "@types/jest": "^26.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/math-parser.git"
+  },
+  "keywords": [
+    "lexer",
+    "parser",
+    "mathematics",
+    "typescript"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

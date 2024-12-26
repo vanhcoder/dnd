@@ -1,7 +1,9 @@
 import "./App.css";
-import { test } from "./formula/test";
+import { evaluateExpression } from "./codegen/math-parser/src";
 function App() {
-  test();
+  const input = `(a + b) * 10`;
+  evaluateExpression(input, { b: 2, a: 10 });
+  // test();
   return (
     //   <WorkFlowContainer>
     //     <Connector fromId="box1" toId="box2" isConnected={false} />
@@ -21,4 +23,5 @@ function App() {
   );
 }
 
+//12 * (-8) + 0.2
 export default App;
