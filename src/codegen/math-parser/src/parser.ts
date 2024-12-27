@@ -68,19 +68,21 @@ export class Parser {
         literalType: "string",
       } as LiteralExpression;
     }
-    if (this.match(TypeExpr.Variable)) { // Nếu token là tên biến hoặc tên hàm
+    if (this.match(TypeExpr.Identifier)) {
+      // Nếu token là tên biến hoặc tên hàm
       const name = this.previous().value; // Lấy giá trị của tên biến/hàm
-      if (this.check(TypeExpr.OpenParen)) { // Kiểm tra xem tiếp theo có phải dấu mở ngoặc (
+      if (this.check(TypeExpr.OpenParen)) {
+        // Kiểm tra xem tiếp theo có phải dấu mở ngoặc (
         return this.parseCallExpression(name); // Phân tích cú pháp lời gọi hàm
       }
-  
+
       // Nếu không phải gọi hàm, trả về biểu thức biến
       return {
         type: ASTNodeType.Variable,
         name: name,
       } as VariableExpression;
     }
-  
+
     if (this.match(TypeExpr.OpenParen)) {
       const node = this.expression(); // Phân tích cú pháp biểu thức bên trong ngoặc
       this.consume(TypeExpr.CloseParen); // Tiêu thụ ')'
@@ -111,7 +113,7 @@ export class Parser {
 
     do {
       args.push(this.expression()); // Phân tích từng tham số
-    } while (this.match(TypeExpr.Operator)); // Phân biệt các tham số bằng dấu ','
+    } while (this.match(TypeExpr.Comma)); // Phân biệt các tham số bằng dấu ','
 
     return args;
   }
@@ -134,7 +136,8 @@ export class Parser {
   }
 
   private advance(): { type: string; value: string } {
-    return this.tokens[this.current++];
+    const token = this.tokens[this.current++];
+    return token;
   }
 
   private previous(): { type: string; value: string } {
@@ -169,27 +172,27 @@ export enum ASTNodeType {
 
 export type Expr = ASTNode;
 
-interface BinaryExpression extends Expr {
+export interface BinaryExpression extends Expr {
   type: ASTNodeType.BinaryExpression;
   left: ASTNode;
   operator: string;
   right: ASTNode;
 }
 
-interface CallExpression extends Expr {
+export interface CallExpression extends Expr {
   type: ASTNodeType.CallExpression;
   caller: string;
   arguments: ASTNode[];
 }
 
-interface LiteralExpression extends Expr {
+export interface LiteralExpression extends Expr {
   type: ASTNodeType.Literal;
-  value: string | number;
+  value: string;
   raw?: string;
   literalType: "string" | "number";
 }
 
-interface VariableExpression extends Expr {
+export interface VariableExpression extends Expr {
   type: ASTNodeType.Variable;
   name: string;
 }

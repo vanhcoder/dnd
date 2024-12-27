@@ -1,0 +1,27 @@
+.formulaEditor {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px 0;
+  width: 800px;
+  margin: 0 auto;
+  min-height: 500px;
+}
+  .ProseMirror {
+  margin: 0 0 1em;
+}
+
+.suggestionList {
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  height: 400px;
+  width: 200px;
+  background-color: red;
+  position: absolute;
+  z-index: 999;
+}
+
+.suggestionItem {
+ 
+}

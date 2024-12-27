@@ -1,5 +1,5 @@
 export enum TypeExpr {
-  Variable = "Variable",
+  Identifier = "Identifier",
   Number = "Number",
   String = "String",
   Function = "Function",
@@ -8,7 +8,6 @@ export enum TypeExpr {
   CloseParen = "CloseParen",
   Separator = "Separator",
   Comma = "Comma",
-
 }
 
 export interface Token {
@@ -35,7 +34,7 @@ export function tokenize(input: string): Token[] {
       }
       src.shift(); // bỏ dấu nháy kép cuối cùng
       tokens.push(token(str, TypeExpr.String));
-    } else if (src[0] == ',') {
+    } else if (src[0] == ",") {
       tokens.push(token(src.shift(), TypeExpr.Comma));
     } else if (isSingleOperator(src[0])) {
       if (src.length > 1 && isMulOperator(src[0] + src[1])) {
@@ -58,25 +57,30 @@ export function tokenize(input: string): Token[] {
     } else if (isSkip(src[0])) {
       src.shift();
     } else {
-      //handle mutiple char
+      /** handle multiple char **/
+
       //build number
       if (isNumber(src[0])) {
         let number = "";
-        while (src.length > 0 && isNumber(src[0])) {
+        let dotCount = 0;
+        while (src.length > 0 && (isNumber(src[0]) || src[0] === ".")) {
+          if (src[0] === ".") {
+            dotCount++;
+            if (dotCount > 1) {
+              break; // chỉ cho phép một dấu chấm trong số
+            }
+          }
           number += src.shift();
         }
         tokens.push(token(number, TypeExpr.Number));
-      } else if (isAlpha(src[0])) {
+      }
+      //build Identifier
+      else if (isAlpha(src[0])) {
         let indent = "";
         while (src.length > 0 && isAlpha(src[0])) {
           indent += src.shift();
         }
-        // if (isKeyword(indent)) {
-        //   tokens.push(token(indent, TypeExpr.Function));
-        // } else {
-        //   tokens.push(token(indent, TypeExpr.Variable));
-        // }
-        tokens.push(token(indent, TypeExpr.Variable));
+        tokens.push(token(indent, TypeExpr.Identifier));
       } else {
         throw Error(`Not found keyword ${src.shift()}`);
       }
@@ -96,20 +100,6 @@ function isSingleOperator(input: string) {
 
 function isMulOperator(input: string) {
   const so = [">=", "==", "!=", "<="];
-  return so.find((i) => i === input);
-}
-
-function isKeyword(input: string) {
-  const fcName = {
-    IF: "if",
-    SUM: "SUM",
-    SUMIF: "SUMIF",
-  };
-  return fcName[input] || false;
-}
-
-function isSeparator(input: string) {
-  const so = [","];
   return so.find((i) => i === input);
 }
 
