@@ -7,7 +7,8 @@ export enum TypeExpr {
   OpenParen = "OpenParen",
   CloseParen = "CloseParen",
   Separator = "Separator",
-  CallExpression = "CallExpression",
+  Comma = "Comma",
+
 }
 
 export interface Token {
@@ -34,8 +35,8 @@ export function tokenize(input: string): Token[] {
       }
       src.shift(); // bỏ dấu nháy kép cuối cùng
       tokens.push(token(str, TypeExpr.String));
-    } else if (isSeparator(src[0])) {
-      tokens.push(token(src.shift(), TypeExpr.Separator));
+    } else if (src[0] == ',') {
+      tokens.push(token(src.shift(), TypeExpr.Comma));
     } else if (isSingleOperator(src[0])) {
       if (src.length > 1 && isMulOperator(src[0] + src[1])) {
         const char1 = src?.shift() || "";
@@ -70,11 +71,12 @@ export function tokenize(input: string): Token[] {
         while (src.length > 0 && isAlpha(src[0])) {
           indent += src.shift();
         }
-        if (isKeyword(indent)) {
-          tokens.push(token(indent, TypeExpr.Function));
-        } else {
-          tokens.push(token(indent, TypeExpr.Variable));
-        }
+        // if (isKeyword(indent)) {
+        //   tokens.push(token(indent, TypeExpr.Function));
+        // } else {
+        //   tokens.push(token(indent, TypeExpr.Variable));
+        // }
+        tokens.push(token(indent, TypeExpr.Variable));
       } else {
         throw Error(`Not found keyword ${src.shift()}`);
       }

@@ -68,33 +68,19 @@ export class Parser {
         literalType: "string",
       } as LiteralExpression;
     }
-
-    if (this.match(TypeExpr.Variable)) {
+    if (this.match(TypeExpr.Variable)) { // Nếu token là tên biến hoặc tên hàm
+      const name = this.previous().value; // Lấy giá trị của tên biến/hàm
+      if (this.check(TypeExpr.OpenParen)) { // Kiểm tra xem tiếp theo có phải dấu mở ngoặc (
+        return this.parseCallExpression(name); // Phân tích cú pháp lời gọi hàm
+      }
+  
+      // Nếu không phải gọi hàm, trả về biểu thức biến
       return {
         type: ASTNodeType.Variable,
-        name: this.previous().value,
+        name: name,
       } as VariableExpression;
     }
-
-    if (this.match(TypeExpr.CallExpression)) {
-      const name = this.previous().value; // Lấy tên function
-      this.consume("("); // Đảm bảo có dấu mở ngoặc
-
-      const args: ASTNode[] = [];
-      while (!this.check(")")) {
-        args.push(this.parseExpression()); // Phân tích từng tham số
-        if (!this.match(TypeExpr.Comma)) break; // Phân biệt các tham số bằng dấu phẩy
-      }
-
-      this.consume(")"); // Đảm bảo có dấu đóng ngoặc
-
-      return {
-        type: "CallExpression",
-        caller: name,
-        arguments: args,
-      } as CallExpression;
-    }
-
+  
     if (this.match(TypeExpr.OpenParen)) {
       const node = this.expression(); // Phân tích cú pháp biểu thức bên trong ngoặc
       this.consume(TypeExpr.CloseParen); // Tiêu thụ ')'
@@ -104,13 +90,29 @@ export class Parser {
     throw new Error("Unexpected token");
   }
 
-  private arguments(): Array<ASTNode> {
-    const args: Array<ASTNode> = [];
-    if (!this.check(")")) {
-      do {
-        args.push(this.expression());
-      } while (this.match("Operator", ","));
+  private parseCallExpression(caller: string): CallExpression {
+    this.consume(TypeExpr.OpenParen); // Đảm bảo dấu '('
+    const args = this.arguments(); // Phân tích danh sách tham số
+    this.consume(TypeExpr.CloseParen); // Đảm bảo dấu ')'
+    return {
+      type: ASTNodeType.CallExpression,
+      caller,
+      arguments: args,
+    };
+  }
+
+  private arguments(): ASTNode[] {
+    const args: ASTNode[] = [];
+
+    // Nếu gặp ')' ngay sau '(', trả về danh sách tham số rỗng
+    if (this.check(TypeExpr.CloseParen)) {
+      return args;
     }
+
+    do {
+      args.push(this.expression()); // Phân tích từng tham số
+    } while (this.match(TypeExpr.Operator)); // Phân biệt các tham số bằng dấu ','
+
     return args;
   }
 
@@ -125,7 +127,6 @@ export class Parser {
   }
 
   private check(type: string): boolean {
-    console.log("check", type);
     return (
       this.current < this.tokens.length &&
       this.tokens[this.current].type === type

@@ -1,7 +1,7 @@
 import "./App.css";
 import { evaluateExpression } from "./codegen/math-parser/src";
 function App() {
-  const input = `(a + b) * 10`;
+  const input = `SUM(1,2)`;
   evaluateExpression(input, { b: 2, a: 10 });
   // test();
   return (
