@@ -1,4 +1,4 @@
-import { VariableExpression } from "../parser";
+import { VariableExpression } from "../ast/parser";
 import { Variables } from "./evaluate";
 
 export function parserVariable(ast: VariableExpression, variables: Variables) {

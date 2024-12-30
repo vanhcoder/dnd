@@ -1,5 +1,49 @@
 import { Token, TypeExpr } from "./lexer";
 
+export interface ASTNode {
+  type: ASTNodeType;
+}
+
+export interface Program extends ASTNode {
+  type: ASTNodeType.Program;
+  body: ASTNode[];
+}
+
+export enum ASTNodeType {
+  BinaryExpression = "BinaryExpression",
+  CallExpression = "CallExpression",
+  Literal = "Literal",
+  Variable = "Variable",
+  Program = "Program",
+}
+
+export type Expr = ASTNode;
+
+export interface BinaryExpression extends Expr {
+  type: ASTNodeType.BinaryExpression;
+  left: ASTNode;
+  operator: string;
+  right: ASTNode;
+}
+
+export interface CallExpression extends Expr {
+  type: ASTNodeType.CallExpression;
+  caller: string;
+  arguments: ASTNode[];
+}
+
+export interface LiteralExpression extends Expr {
+  type: ASTNodeType.Literal;
+  value: string;
+  raw?: string;
+  literalType: "string" | "number";
+}
+
+export interface VariableExpression extends Expr {
+  type: ASTNodeType.Variable;
+  name: string;
+}
+
 export class Parser {
   private tokens: Token[];
   private current: number;
@@ -16,8 +60,8 @@ export class Parser {
     );
   }
 
-  private currToken(){
-    return this.tokens[this.current]
+  private currToken() {
+    return this.tokens[this.current];
   }
 
   private nextToken(): { type: string; value: string } {
@@ -57,7 +101,6 @@ export class Parser {
     return false;
   }
 
-
   // implement
 
   parse(): ASTNode {
@@ -70,7 +113,7 @@ export class Parser {
 
   private parseComparison(): ASTNode {
     let node = this.parseAddition(); // Xử lý toán tử số học trước
-  
+
     while (this.matchOperator(">", "<", ">=", "<=", "==", "!=")) {
       const operator = this.prevToken().value; // Lấy toán tử so sánh
       const right = this.parseAddition(); // Tiếp tục xử lý toán tử số học bên phải
@@ -81,7 +124,7 @@ export class Parser {
         right: right,
       } as BinaryExpression;
     }
-  
+
     return node;
   }
 
@@ -102,7 +145,6 @@ export class Parser {
     return node;
   }
 
-
   private parseMultiplication(): ASTNode {
     let node = this.parsePrimary();
 
@@ -121,7 +163,6 @@ export class Parser {
   }
 
   private parsePrimary(): ASTNode {
-
     if (this.match(TypeExpr.Number)) {
       return {
         type: ASTNodeType.Literal,
@@ -138,7 +179,7 @@ export class Parser {
         literalType: "string",
       } as LiteralExpression;
     }
-    
+
     if (this.match(TypeExpr.Identifier)) {
       // Nếu token là tên biến hoặc tên hàm
       const name = this.prevToken().value; // Lấy giá trị của tên biến/hàm
@@ -188,49 +229,4 @@ export class Parser {
 
     return args;
   }
-
-}
-
-export interface ASTNode {
-  type: ASTNodeType;
-}
-
-export interface Program extends ASTNode {
-  type: ASTNodeType.Program;
-  body: ASTNode[];
-}
-
-export enum ASTNodeType {
-  BinaryExpression = "BinaryExpression",
-  CallExpression = "CallExpression",
-  Literal = "Literal",
-  Variable = "Variable",
-  Program = "Program",
-}
-
-export type Expr = ASTNode;
-
-export interface BinaryExpression extends Expr {
-  type: ASTNodeType.BinaryExpression;
-  left: ASTNode;
-  operator: string;
-  right: ASTNode;
-}
-
-export interface CallExpression extends Expr {
-  type: ASTNodeType.CallExpression;
-  caller: string;
-  arguments: ASTNode[];
-}
-
-export interface LiteralExpression extends Expr {
-  type: ASTNodeType.Literal;
-  value: string;
-  raw?: string;
-  literalType: "string" | "number";
-}
-
-export interface VariableExpression extends Expr {
-  type: ASTNodeType.Variable;
-  name: string;
 }

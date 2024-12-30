@@ -5,6 +5,7 @@ import MIN from "./MIN";
 import WEEKDAY from "./WEEKDAY";
 import AND from "./AND";
 import SUMIF from "./SUMIF";
+import SUMIFS from "./SUMIFS";
 
 const formulas = {
   IF,
@@ -14,6 +15,9 @@ const formulas = {
   COUNTIF,
   AND,
   SUMIF,
+  SUMIFS,
 };
+
+export type ExcelFunctions = typeof formulas;
 
 export default formulas;

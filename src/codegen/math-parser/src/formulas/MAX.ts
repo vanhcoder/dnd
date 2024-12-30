@@ -1,6 +1,18 @@
 import { VariablesValue } from "../evaluate/evaluate";
 
-function MAX(list: Record<string, VariablesValue>[], key: string): number {
+export type MAXFormula = (
+  list: Record<string, VariablesValue>[],
+  key: string
+) => number;
+
+/**
+ * @function MAX
+ * @param list mảng các object
+ * @param key trường cần so sánh
+ * @returns giá trị lớn nhất
+ */
+
+const MAX: MAXFormula = (list, key) => {
   return Math.max(
     ...list.map((i) => {
       if (!Object.prototype.hasOwnProperty.call(i, key)) {
@@ -12,6 +24,6 @@ function MAX(list: Record<string, VariablesValue>[], key: string): number {
       return i[key] as number;
     })
   );
-}
+};
 
 export default MAX;

@@ -1,6 +1,17 @@
 import { VariablesValue } from "../evaluate/evaluate";
 
-function MIN(list: Record<string, VariablesValue>[], key: string): number {
+export type MINFormula = (
+  list: Record<string, VariablesValue>[],
+  key: string
+) => number;
+
+/**
+ *
+ * @param list mảng các object
+ * @param key trường cần so sánh
+ * @returns giá trị nhỏ nhất
+ */
+const MIN: MINFormula = (list, key) => {
   return Math.min(
     ...list.map((i) => {
       if (!Object.prototype.hasOwnProperty.call(i, key)) {
@@ -12,6 +23,6 @@ function MIN(list: Record<string, VariablesValue>[], key: string): number {
       return i[key] as number;
     })
   );
-}
+};
 
 export default MIN;

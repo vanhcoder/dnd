@@ -1,19 +1,37 @@
 import { VariablesValue } from "../evaluate/evaluate";
 
-// SUMIF(ab, "index", ">", 2, "value")
+export type SUMIFFormula = (
+  range: Record<string, VariablesValue>[],
+  sumByKey: string,
+  conditionByKey: string,
+  condition: string,
+  conditionValue: string
+) => number;
 
-function SUMIF(
-  range: Record<string, VariablesValue>[], //ab
-  conditionByKey: string, // "index"
-  condition: string, // ">"
-  conditionValue: string, // 2
-  sumByKey: string // "value"
-): number {
+/**
+ *
+ * @function SUMIF
+ * @param range: mảng các object
+ * @param sumByKey: trường cần sum
+ * @param conditionByKey: trường cần so sánh
+ * @param condition: điều kiện so sánh
+ * @param conditionValue: giá trị so sánh
+ * vd:
+ * ab = [{index: 1, value: 2, cost:2 }, {index: 2, value: 3, , cost: 3}]
+ * SUMIF(ab, "cost", "index", ">", 2)
+ *
+ **/
+
+const SUMIF: SUMIFFormula = (
+  range,
+  sumByKey,
+  conditionByKey,
+  condition,
+  conditionValue
+) => {
   let sum = 0;
 
-  // Lặp qua từng phần tử trong range
   for (const item of range) {
-    // Kiểm tra nếu đối tượng có chứa key
     if (!Object.prototype.hasOwnProperty.call(item, conditionByKey)) {
       throw new Error(`SUMIF: Undefined condition Key: ${conditionByKey}`);
     }
@@ -22,7 +40,6 @@ function SUMIF(
       throw new Error(`SUMIF: Undefined key: ${sumByKey}`);
     }
 
-    // Lấy giá trị của phần tử tại key
     const valueOfConditionKey = item[conditionByKey];
     const valueMakeToSum = item[sumByKey];
 
@@ -36,7 +53,6 @@ function SUMIF(
 
     const cdt = parseFloat(conditionValue);
 
-    // Kiểm tra điều kiện dựa trên loại của condition
     let conditionMet = false;
     switch (condition) {
       case "=":
@@ -61,13 +77,12 @@ function SUMIF(
         throw new Error(`SUMIF: Unsupported condition: ${condition}`);
     }
 
-    // Nếu điều kiện thỏa mãn, tăng biến đếm
     if (conditionMet) {
       sum += valueMakeToSum;
     }
   }
 
   return sum;
-}
+};
 
 export default SUMIF;

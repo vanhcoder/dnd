@@ -1,36 +1,17 @@
+import { ExcelFunctions } from "../formulas";
 import {
   ASTNode,
   ASTNodeType,
   BinaryExpression,
   CallExpression,
   LiteralExpression,
+  Program,
   VariableExpression,
-} from "../parser";
+} from "../ast/parser";
 import { parserBinaryExpression } from "./parser_binary_expression";
 import { parserCallExpression } from "./parser_call_expression";
 import { parserLiteral } from "./parser_literal";
 import { parserVariable } from "./parser_variable";
-
-export type ExcelFunctions = {
-  IF: (condition: boolean, a: ASTNode, b: ASTNode) => ASTNode;
-  AND: (...args: boolean[]) => boolean;
-  MAX: (list: Record<string, VariablesValue>[], key: string) => number;
-  MIN: (list: Record<string, VariablesValue>[], key: string) => number;
-  WEEKDAY: (dateStr: string, returnType: number) => number;
-  COUNTIF: (
-    range: Record<string, VariablesValue>[],
-    condition: string,
-    value: string,
-    key: string
-  ) => number;
-  SUMIF: (
-    range: Record<string, VariablesValue>[],
-    condition: string,
-    conditionValue: string,
-    key: string,
-    value: string
-  ) => number;
-};
 
 export type VariablesValue =
   | string
@@ -53,7 +34,7 @@ export const evaluate: Evaluate = (
 ) => {
   switch (ast.type) {
     case ASTNodeType.Program: {
-      return evaluate(ast.body[0], variables, functions);
+      return evaluate((ast as Program).body[0], variables, functions);
     }
     case ASTNodeType.Variable: {
       return parserVariable(ast as VariableExpression, variables);

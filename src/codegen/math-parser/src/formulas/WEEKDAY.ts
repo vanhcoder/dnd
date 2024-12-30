@@ -1,4 +1,13 @@
-function WEEKDAY(dateStr: string, returnType: number = 1): number {
+type WEEKDAYFormula = (dateStr: string, returnType?: number) => number;
+
+/**
+ * @function WEEKDAY
+ * @param dateStr chuỗi ngày
+ * @param returnType kiểu trả về
+ * @returns số thứ tự của ngày trong tuần
+ */
+
+const WEEKDAY: WEEKDAYFormula = (dateStr, returnType = 1) => {
   // Kiểm tra nếu chuỗi ngày có thể chuyển thành Date hợp lệ
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) {
@@ -22,6 +31,6 @@ function WEEKDAY(dateStr: string, returnType: number = 1): number {
     default:
       throw new Error(`WEEKDAY: Unsupported returnType: ${returnType}`);
   }
-}
+};
 
 export default WEEKDAY;

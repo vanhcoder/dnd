@@ -1,5 +1,6 @@
-import { BinaryExpression } from "../parser";
-import { Evaluate, ExcelFunctions, Variables } from "./evaluate";
+import { ExcelFunctions } from "../formulas";
+import { BinaryExpression } from "../ast/parser";
+import { Evaluate, Variables } from "./evaluate";
 
 export function parserBinaryExpression(
   ast: BinaryExpression,

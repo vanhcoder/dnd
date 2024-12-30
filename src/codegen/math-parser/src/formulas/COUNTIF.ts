@@ -1,23 +1,30 @@
 import { VariablesValue } from "../evaluate/evaluate";
 
-// COUNTIF(ab, "value", ">", 2)
+export type COUNTIFFormula = (
+  range: Record<string, VariablesValue>[],
+  conditionByKey: string,
+  operator: string,
+  value: string
+) => number;
 
-function COUNTIF(
-  range: Record<string, VariablesValue>[], //ab
-  conditionByKey: string, // value
-  operator: string, // ">"
-  value: string // 2
-): number {
+/**
+ *
+ * @function COUNTIF
+ * @param range: mảng các object
+ * @param conditionByKey: trường cần so sánh
+ * @param operator: toán tử so sánh
+ * @param value: giá trị so sánh
+ * @returns số lượng phần tử th
+ * */
+
+const COUNTIF: COUNTIFFormula = (range, conditionByKey, operator, value) => {
   let count = 0;
 
-  // Lặp qua từng phần tử trong range
   for (const item of range) {
-    // Kiểm tra nếu đối tượng có chứa key
     if (!Object.prototype.hasOwnProperty.call(item, conditionByKey)) {
       throw new Error(`COUNTIF: Undefined key: ${conditionByKey}`);
     }
 
-    // Lấy giá trị của phần tử tại key
     const itemValue = item[conditionByKey];
 
     const formattedValue = parseFloat(value);
@@ -25,7 +32,6 @@ function COUNTIF(
       throw new Error(`COUNTIF: Value is not a string or number: ${itemValue}`);
     }
 
-    // Kiểm tra điều kiện dựa trên loại của condition
     let conditionMet = false;
     switch (operator) {
       case "=":
@@ -50,13 +56,12 @@ function COUNTIF(
         throw new Error(`COUNTIF: Unsupported operator: ${operator}`);
     }
 
-    // Nếu điều kiện thỏa mãn, tăng biến đếm
     if (conditionMet) {
       count++;
     }
   }
 
   return count;
-}
+};
 
 export default COUNTIF;

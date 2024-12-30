@@ -84,6 +84,7 @@ function TextEditor() {
         const value = evaluate();
         setValue(value.toString());
       } catch (error) {
+        console.log("error", error);
         setErrors(JSON.stringify(error));
       }
     })();
@@ -170,6 +171,7 @@ function TextEditor() {
           height: 300,
         }}
       >
+        <h1>Nhập formula:</h1>
         <div
           style={{
             width: "100%",
