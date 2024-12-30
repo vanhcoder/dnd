@@ -1,6 +1,6 @@
 import { VariablesValue } from "../evaluate/evaluate";
 
-// SUMIF(ab, ">", 2, "index", "value")
+// SUMIF(ab, "index", ">", 2, "value")
 
 function SUMIF(
   range: Record<string, VariablesValue>[], //ab

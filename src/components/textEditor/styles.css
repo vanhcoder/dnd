@@ -1,0 +1,59 @@
+.textInput {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  outline: none;
+  cursor: text;
+  -webkit-user-modify: read-write-plaintext-only;
+  white-space: pre-wrap;
+  -webkit-transform: translateZ(0);
+  background-color: #fff;
+  direction: ltr;
+  font-size: 14px;
+  line-height: 23px;
+  text-align: left;
+  padding: 10px;
+  white-space: nowrap;
+  white-space: pre-wrap; /* Cho phép ngắt dòng */
+  word-wrap: break-word; /* Ngắt từ nếu quá dài */
+  overflow-wrap: break-word; /* Ngắt từ nếu cần */
+  overflow: hidden; /* Ẩn phần nội dung thừa nếu có */
+}
+
+.textInput > span.number {
+  color: #15c;
+}
+
+.string {
+  color: green;
+}
+
+.identifier {
+  color: purple;
+}
+
+.operator {
+  color: red;
+}
+
+.paren {
+  color: gray;
+}
+
+.comma {
+  color: orange;
+}
+
+.default {
+  color: black;
+}
+
+
+.btn {
+  background-color: white;
+  border: 1px solid gray;
+  padding: 5px;
+  border-radius: 5px;
+  min-width: 100px;
+  color: black;
+}

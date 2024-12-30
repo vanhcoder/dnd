@@ -1,6 +1,6 @@
 import { VariablesValue } from "../evaluate/evaluate";
 
-// COUNTIF(ab, ">", 2, "value")
+// COUNTIF(ab, "value", ">", 2)
 
 function COUNTIF(
   range: Record<string, VariablesValue>[], //ab
